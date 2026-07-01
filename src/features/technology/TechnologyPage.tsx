@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/design-system/card";
+import { Badge } from "@/components/design-system/badge";
 import { motion } from "framer-motion";
 import { Database, FileJson, ArrowRight, Activity, LineChart as ChartIcon, Zap } from "lucide-react";
 

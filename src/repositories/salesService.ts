@@ -1,9 +1,9 @@
-import type { Region, Product, Customer, FactSales } from '../types';
+import type { Region, Product, Customer, FactSales } from '@/shared/types';
 
-import regionsData from '../data/regions.json';
-import productsData from '../data/products.json';
-import customersData from '../data/customers.json';
-import factSalesData from '../data/factSales.json';
+import regionsData from '@/mock/regions.json';
+import productsData from '@/mock/products.json';
+import customersData from '@/mock/customers.json';
+import factSalesData from '@/mock/factSales.json';
 
 // Simulate network delay for loading skeletons
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

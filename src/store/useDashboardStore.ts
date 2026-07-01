@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import type { Region, Product, Customer, FactSales } from '../types';
-import { salesService } from '../services/salesService';
+import type { Region, Product, Customer, FactSales } from '@/shared/types';
+import { salesService } from '@/repositories/salesService';
 
 interface DashboardState {
   regions: Region[];

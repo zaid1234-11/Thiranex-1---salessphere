@@ -8,7 +8,7 @@ import {
   LineChart, 
   Cpu 
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { useDashboardStore } from '@/store/useDashboardStore';
 import { useEffect } from 'react';
 
@@ -21,7 +21,7 @@ const navigation = [
   { name: 'Forecasting', href: '/forecasting', icon: LineChart },
 ];
 
-export function MainLayout() {
+export function AppShell() {
   const fetchData = useDashboardStore(state => state.fetchData);
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { useDashboardStore } from "@/store/useDashboardStore";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/design-system/card";
+import { Badge } from "@/components/design-system/badge";
+import { Skeleton } from "@/components/design-system/skeleton";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, AreaChart, Area } from "recharts";
 import { format, subMonths } from "date-fns";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
