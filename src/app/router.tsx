@@ -33,8 +33,7 @@ export function AppRouter() {
             module.visible && (
               <Route 
                 key={module.id} 
-                path={module.route === '/' ? 'index' : module.route.replace('/', '')} 
-                index={module.route === '/'}
+                {...(module.route === '/' ? { index: true } : { path: module.route.replace('/', '') })}
                 element={routeComponents[module.route]} 
               />
             )

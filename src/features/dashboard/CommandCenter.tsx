@@ -6,6 +6,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, AreaChart,
 import { format, subMonths } from "date-fns";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 export function CommandCenter() {
   const { sales, isLoading, error } = useDashboardStore();
@@ -62,10 +63,14 @@ export function CommandCenter() {
       animate="visible"
       variants={containerVariants}
     >
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight mb-2">Overview</h2>
-        <p className="text-muted-foreground">Welcome back to SalesSphere. Here is your enterprise snapshot.</p>
-      </div>
+      <PageHeader 
+        title="Overview" 
+        description="Welcome back to SalesSphere. Here is your enterprise snapshot."
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/' },
+          { label: 'Overview' }
+        ]}
+      />
 
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
         {/* Executive Summary */}
