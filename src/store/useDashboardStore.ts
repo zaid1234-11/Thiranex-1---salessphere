@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { Region, Product, Customer, FactSales } from '@/shared/types';
-import { salesService } from '@/repositories/salesService';
+import { salesRepository } from '@/repositories/SalesRepository';
 
 interface DashboardState {
   regions: Region[];
@@ -22,7 +22,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   fetchData: async () => {
     set({ isLoading: true, error: null });
     try {
-      const data = await salesService.getDashboardData();
+      const data = await salesRepository.getDashboardData();
       set({ 
         regions: data.regions,
         products: data.products,
