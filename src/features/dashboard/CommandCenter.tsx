@@ -1,4 +1,5 @@
 import { useDashboardStore } from "@/store/useDashboardStore";
+import { useSalesAnalytics } from "@/hooks/useSalesAnalytics";
 import { ExecutiveSummary } from "@/widgets/ExecutiveSummary";
 import { AlertCenter } from "@/widgets/AlertCenter";
 import type { AlertItem } from "@/widgets/AlertCenter";
@@ -7,7 +8,6 @@ import type { ActivityItem } from "@/widgets/RecentActivity";
 import { MetricCard } from "@/components/design-system/MetricCard";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/design-system/card";
 import { Skeleton } from "@/components/design-system/skeleton";
-import { format, subMonths } from "date-fns";
 import { motion } from "framer-motion";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SparklineChart } from "@/components/charts/SparklineChart";
@@ -34,19 +34,7 @@ export function CommandCenter() {
     return <div className="text-destructive">Error: {error}</div>;
   }
 
-  // Calculate some basic metrics for the cards
-  // In a real app, this would be memoized or computed in the store
-  const totalRevenue = sales.reduce((sum, s) => sum + s.revenue, 0);
-  const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
-  const totalOrders = sales.length;
-
-  // Mock monthly aggregated data for sparklines
-  const last6Months = Array.from({ length: 6 }).map((_, i) => ({
-    name: format(subMonths(new Date(), 5 - i), 'MMM'),
-    revenue: Math.floor(Math.random() * 50000) + 10000,
-    profit: Math.floor(Math.random() * 20000) + 5000,
-    orders: Math.floor(Math.random() * 500) + 100,
-  }));
+  const { kpis, trends, timeseries } = useSalesAnalytics(sales);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -116,34 +104,34 @@ export function CommandCenter() {
         <motion.div variants={itemVariants}>
           <MetricCard
             title="Total Revenue"
-            value={(totalRevenue / 1000000).toFixed(2)}
+            value={(kpis.totalRevenue / 1000000).toFixed(2)}
             valuePrefix="$"
             valueSuffix="M"
-            trend={{ value: 12.4, label: "vs last quarter", isPositive: true }}
+            trend={trends.revenue}
           >
-            <SparklineChart data={last6Months} dataKey="revenue" color="hsl(var(--primary))" />
+            <SparklineChart data={timeseries.last6Months} dataKey="revenue" color="hsl(var(--primary))" />
           </MetricCard>
         </motion.div>
 
         <motion.div variants={itemVariants}>
           <MetricCard
             title="Total Profit"
-            value={(totalProfit / 1000).toFixed(1)}
+            value={(kpis.totalProfit / 1000).toFixed(1)}
             valuePrefix="$"
             valueSuffix="K"
-            trend={{ value: 8.1, label: "vs last quarter", isPositive: true }}
+            trend={trends.profit}
           >
-            <SparklineChart data={last6Months} dataKey="profit" color="hsl(var(--secondary))" />
+            <SparklineChart data={timeseries.last6Months} dataKey="profit" color="hsl(var(--secondary))" />
           </MetricCard>
         </motion.div>
 
         <motion.div variants={itemVariants}>
           <MetricCard
             title="Total Orders"
-            value={totalOrders.toLocaleString()}
-            trend={{ value: -2.3, label: "vs last quarter", isPositive: false }}
+            value={kpis.totalOrders.toLocaleString()}
+            trend={trends.orders}
           >
-            <SparklineChart data={last6Months} dataKey="orders" color="hsl(var(--destructive))" />
+            <SparklineChart data={timeseries.last6Months} dataKey="orders" color="hsl(var(--destructive))" />
           </MetricCard>
         </motion.div>
       </div>
@@ -157,7 +145,7 @@ export function CommandCenter() {
           </CardHeader>
           <CardContent className="h-[350px]">
             <TrendAreaChart 
-              data={last6Months}
+              data={timeseries.last6Months}
               xAxisKey="name"
               valueFormatter={(val) => `$${val/1000}k`}
               series={[
