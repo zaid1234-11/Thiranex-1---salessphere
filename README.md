@@ -1,6 +1,16 @@
 # SalesSphere
 
-![SalesSphere Hero Banner](./demo/hero.png)
+![SalesSphere Hero Banner](./docs/images/hero.png)
+
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](#)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](#)
+[![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite&logoColor=white)](#)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC?logo=tailwind-css&logoColor=white)](#)
+[![Zustand](https://img.shields.io/badge/State-Zustand-orange)](#)
+[![Recharts](https://img.shields.io/badge/Charts-Recharts-blue)](#)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+**[🌐 Live Demo](#) | [📹 Demo Video](#) | [📄 Engineering Handbook](#documentation-handbook)**
 
 **SalesSphere** is an enterprise-grade sales analytics dashboard built to process and visualize 100,000+ records of real-world e-commerce data. Designed with a strict focus on performance, architecture, and premium UX, this project serves as a masterclass in modern React engineering.
 
