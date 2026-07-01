@@ -7,10 +7,11 @@ import type { ActivityItem } from "@/widgets/RecentActivity";
 import { MetricCard } from "@/components/design-system/MetricCard";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/design-system/card";
 import { Skeleton } from "@/components/design-system/skeleton";
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, AreaChart, Area } from "recharts";
 import { format, subMonths } from "date-fns";
 import { motion } from "framer-motion";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { SparklineChart } from "@/components/charts/SparklineChart";
+import { TrendAreaChart } from "@/components/charts/TrendAreaChart";
 
 export function CommandCenter() {
   const { sales, isLoading, error } = useDashboardStore();
@@ -110,7 +111,7 @@ export function CommandCenter() {
         </motion.div>
       </div>
 
-      {/* Vercel-style KPIs */}
+    {/* Vercel-style KPIs */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <motion.div variants={itemVariants}>
           <MetricCard
@@ -120,11 +121,7 @@ export function CommandCenter() {
             valueSuffix="M"
             trend={{ value: 12.4, label: "vs last quarter", isPositive: true }}
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={last6Months}>
-                <Line type="monotone" dataKey="revenue" stroke="#743014" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+            <SparklineChart data={last6Months} dataKey="revenue" color="hsl(var(--primary))" />
           </MetricCard>
         </motion.div>
 
@@ -136,11 +133,7 @@ export function CommandCenter() {
             valueSuffix="K"
             trend={{ value: 8.1, label: "vs last quarter", isPositive: true }}
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={last6Months}>
-                <Line type="monotone" dataKey="profit" stroke="#84592B" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+            <SparklineChart data={last6Months} dataKey="profit" color="hsl(var(--secondary))" />
           </MetricCard>
         </motion.div>
 
@@ -150,11 +143,7 @@ export function CommandCenter() {
             value={totalOrders.toLocaleString()}
             trend={{ value: -2.3, label: "vs last quarter", isPositive: false }}
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={last6Months}>
-                <Line type="monotone" dataKey="orders" stroke="#ef4444" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+            <SparklineChart data={last6Months} dataKey="orders" color="hsl(var(--destructive))" />
           </MetricCard>
         </motion.div>
       </div>
@@ -167,28 +156,15 @@ export function CommandCenter() {
             <CardDescription>Trailing 6 months aggregated view</CardDescription>
           </CardHeader>
           <CardContent className="h-[350px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={last6Months} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#743014" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#743014" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorPro" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#84592B" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#84592B" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="name" stroke="#6B5541" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#6B5541" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val/1000}k`} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#3A2516', borderColor: '#743014', borderRadius: '8px' }}
-                  itemStyle={{ color: '#E8D1A7' }}
-                />
-                <Area type="monotone" dataKey="revenue" stroke="#743014" fillOpacity={1} fill="url(#colorRev)" />
-                <Area type="monotone" dataKey="profit" stroke="#84592B" fillOpacity={1} fill="url(#colorPro)" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <TrendAreaChart 
+              data={last6Months}
+              xAxisKey="name"
+              valueFormatter={(val) => `$${val/1000}k`}
+              series={[
+                { key: 'revenue', name: 'Revenue', color: 'hsl(var(--primary))' },
+                { key: 'profit', name: 'Profit', color: 'hsl(var(--secondary))' }
+              ]}
+            />
           </CardContent>
         </Card>
       </motion.div>
