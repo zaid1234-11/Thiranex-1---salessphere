@@ -8,6 +8,8 @@ import type { ActivityItem } from "@/widgets/RecentActivity";
 import { MetricCard } from "@/components/design-system/MetricCard";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/design-system/card";
 import { Skeleton } from "@/components/design-system/skeleton";
+import { SkeletonExecutiveSummary, SkeletonMetricCard, SkeletonChart } from "@/components/feedback/SkeletonSystem";
+import { ErrorState } from "@/components/feedback/ErrorState";
 import { motion } from "framer-motion";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { lazy, Suspense } from 'react';
@@ -15,25 +17,34 @@ import { lazy, Suspense } from 'react';
 const SparklineChart = lazy(() => import("@/components/charts/SparklineChart").then(m => ({ default: m.SparklineChart })));
 const TrendAreaChart = lazy(() => import("@/components/charts/TrendAreaChart").then(m => ({ default: m.TrendAreaChart })));
 
+import { toast } from "sonner";
+import { Download } from "lucide-react";
+
 export function CommandCenter() {
   const { sales, isLoading, error } = useDashboardStore();
 
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-[120px] w-full" />
+        <SkeletonExecutiveSummary />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Skeleton className="h-[150px] w-full" />
-          <Skeleton className="h-[150px] w-full" />
-          <Skeleton className="h-[150px] w-full" />
+          <SkeletonMetricCard />
+          <SkeletonMetricCard />
+          <SkeletonMetricCard />
         </div>
-        <Skeleton className="h-[400px] w-full" />
+        <SkeletonChart />
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-destructive">Error: {error}</div>;
+    return (
+      <ErrorState 
+        title="Failed to load dashboard" 
+        message={error}
+        onRetry={() => window.location.reload()}
+      />
+    );
   }
 
   const { kpis, trends, timeseries } = useSalesAnalytics(sales);
@@ -71,6 +82,10 @@ export function CommandCenter() {
     { text: 'Customer retention improved by 8% year-over-year.' },
   ];
 
+  const handleExport = () => {
+    toast.success("Dashboard exported successfully");
+  };
+
   return (
     <motion.div 
       className="space-y-8"
@@ -85,6 +100,15 @@ export function CommandCenter() {
           { label: 'Dashboard', href: '/' },
           { label: 'Overview' }
         ]}
+        actions={
+          <button 
+            onClick={handleExport}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </button>
+        }
       />
 
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">

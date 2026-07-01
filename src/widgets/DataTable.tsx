@@ -8,7 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/design-system/table";
-import { Skeleton } from "@/components/design-system/skeleton";
+import { SkeletonTable } from "@/components/feedback/SkeletonSystem";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { Database } from "lucide-react";
 
 export interface ColumnDef<T> {
   header: string;
@@ -41,13 +43,16 @@ export function DataTable<T>({
   });
 
   if (isLoading) {
+    return <SkeletonTable rows={10} />;
+  }
+
+  if (data.length === 0) {
     return (
-      <div className="space-y-3">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="h-16 w-full" />
-      </div>
+      <EmptyState 
+        title="No records found" 
+        message={emptyMessage} 
+        icon={<Database className="h-10 w-10 text-muted-foreground opacity-50" />} 
+      />
     );
   }
 
@@ -68,37 +73,29 @@ export function DataTable<T>({
           </TableRow>
         </TableHeader>
         <TableBody style={{ height: `${rowVirtualizer.getTotalSize()}px`, position: 'relative' }}>
-          {data.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
-                {emptyMessage}
-              </TableCell>
-            </TableRow>
-          ) : (
-            rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const row = data[virtualRow.index];
-              return (
-                <TableRow 
-                  key={virtualRow.index} 
-                  className="border-b border-border/50 absolute top-0 left-0 w-full"
-                  style={{
-                    transform: `translateY(${virtualRow.start}px)`,
-                    height: `${virtualRow.size}px`
-                  }}
-                >
-                  {columns.map((col, colIndex) => (
-                    <TableCell key={colIndex} className="py-3 truncate max-w-xs">
-                      {col.cell 
-                        ? col.cell(row) 
-                        : col.accessorKey 
-                          ? String(row[col.accessorKey])
-                          : null}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })
-          )}
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = data[virtualRow.index];
+            return (
+              <TableRow 
+                key={virtualRow.index} 
+                className="border-b border-border/50 absolute top-0 left-0 w-full hover:bg-muted/50 transition-colors"
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                  height: `${virtualRow.size}px`
+                }}
+              >
+                {columns.map((col, colIndex) => (
+                  <TableCell key={colIndex} className="py-3 truncate max-w-xs">
+                    {col.cell 
+                      ? col.cell(row) 
+                      : col.accessorKey 
+                        ? String(row[col.accessorKey])
+                        : null}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
