@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Region, Product, Customer, FactSales } from '../types';
+import type { Region, Product, Customer, FactSales } from '../types';
 import { salesService } from '../services/salesService';
 
 interface DashboardState {

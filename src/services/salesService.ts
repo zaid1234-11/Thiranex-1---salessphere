@@ -1,4 +1,4 @@
-import { Region, Product, Customer, FactSales } from '../types';
+import type { Region, Product, Customer, FactSales } from '../types';
 
 import regionsData from '../data/regions.json';
 import productsData from '../data/products.json';
