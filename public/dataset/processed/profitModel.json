@@ -1,0 +1,17 @@
+{
+  "method": "Category Margin Model",
+  "defaultMargin": 0.25,
+  "overrides": {
+    "beleza_saude": 0.35,
+    "informatica_acessorios": 0.18,
+    "automotivo": 0.2,
+    "cama_mesa_banho": 0.3,
+    "moveis_decoracao": 0.28,
+    "esporte_lazer": 0.32,
+    "relogios_presentes": 0.4,
+    "telefonia": 0.15,
+    "brinquedos": 0.25,
+    "fashion": 0.45,
+    "livros_tecnicos": 0.22
+  }
+}

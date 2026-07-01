@@ -1,0 +1,9 @@
+{
+  "dataset": "Olist",
+  "processedAt": "2026-07-01T21:34:50.665Z",
+  "records": 110197,
+  "missingValues": 0,
+  "version": "1.0.0",
+  "source": "Kaggle Olist",
+  "etlVersion": "1.0.0"
+}
