@@ -14,6 +14,7 @@ interface MetricCardProps {
   className?: string;
   valuePrefix?: string;
   valueSuffix?: string;
+  children?: React.ReactNode;
 }
 
 export function MetricCard({ 
@@ -23,7 +24,8 @@ export function MetricCard({
   trend, 
   className,
   valuePrefix = '',
-  valueSuffix = ''
+  valueSuffix = '',
+  children
 }: MetricCardProps) {
   return (
     <Card className={cn("overflow-hidden", className)}>
@@ -58,6 +60,11 @@ export function MetricCard({
             </span>
             <span className="text-muted-foreground">{trend.label}</span>
           </p>
+        )}
+        {children && (
+          <div className="mt-4 h-[80px]">
+            {children}
+          </div>
         )}
       </CardContent>
     </Card>

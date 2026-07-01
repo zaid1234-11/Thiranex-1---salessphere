@@ -1,10 +1,14 @@
 import { useDashboardStore } from "@/store/useDashboardStore";
+import { ExecutiveSummary } from "@/widgets/ExecutiveSummary";
+import { AlertCenter } from "@/widgets/AlertCenter";
+import type { AlertItem } from "@/widgets/AlertCenter";
+import { RecentActivity } from "@/widgets/RecentActivity";
+import type { ActivityItem } from "@/widgets/RecentActivity";
+import { MetricCard } from "@/components/design-system/MetricCard";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/design-system/card";
-import { Badge } from "@/components/design-system/badge";
 import { Skeleton } from "@/components/design-system/skeleton";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, AreaChart, Area } from "recharts";
 import { format, subMonths } from "date-fns";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { PageHeader } from "@/components/layout/PageHeader";
 
@@ -56,6 +60,26 @@ export function CommandCenter() {
     visible: { y: 0, opacity: 1 }
   };
 
+  const mockAlerts: AlertItem[] = [
+    { id: 1, type: 'warning', message: 'Furniture margin below 20% target' },
+    { id: 2, type: 'success', message: 'Q3 Revenue exceeded company goal' },
+    { id: 3, type: 'warning', message: 'Europe region showing slowing growth' },
+    { id: 4, type: 'success', message: 'Customer acquisition remains healthy' },
+  ];
+
+  const mockActivities: ActivityItem[] = [
+    { id: 1, title: 'Forecast regenerated', timestamp: 'Today, 09:42 AM', color: 'primary' },
+    { id: 2, title: 'Revenue models updated', timestamp: 'Yesterday, 14:15 PM', color: 'secondary' },
+    { id: 3, title: 'New customer segment detected', timestamp: 'Yesterday, 10:00 AM', color: 'accent' },
+  ];
+
+  const execItems = [
+    { text: 'Revenue increased 14% compared to the previous quarter.' },
+    { text: 'North America region generated highest profit margins.' },
+    { text: 'Software subscriptions contributed 42% of total sales.' },
+    { text: 'Customer retention improved by 8% year-over-year.' },
+  ];
+
   return (
     <motion.div 
       className="space-y-8"
@@ -73,156 +97,65 @@ export function CommandCenter() {
       />
 
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
-        {/* Executive Summary */}
         <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="h-full bg-gradient-to-br from-card to-card/50 border-primary/20">
-            <CardHeader>
-              <CardTitle>Executive Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm font-medium">
-              <p className="flex items-start gap-2">
-                <span className="text-primary mt-1">✦</span>
-                Revenue increased 14% compared to the previous quarter.
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-primary mt-1">✦</span>
-                North America region generated highest profit margins.
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-primary mt-1">✦</span>
-                Software subscriptions contributed 42% of total sales.
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-primary mt-1">✦</span>
-                Customer retention improved by 8% year-over-year.
-              </p>
-            </CardContent>
-          </Card>
+          <ExecutiveSummary items={execItems} />
+        </motion.div>
+        
+        <motion.div variants={itemVariants} className="lg:col-span-1">
+          <AlertCenter alerts={mockAlerts} />
         </motion.div>
 
-        {/* Alert Center */}
         <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Alert Center</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-destructive" />
-                <span className="text-sm">Furniture margin below 20% target</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                <span className="text-sm">Q3 Revenue exceeded company goal</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-destructive" />
-                <span className="text-sm">Europe region showing slowing growth</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                <span className="text-sm">Customer acquisition remains healthy</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Recent Activity */}
-        <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex gap-4">
-                <div className="w-2 h-2 mt-1.5 rounded-full bg-primary" />
-                <div>
-                  <p className="text-sm font-medium">Forecast regenerated</p>
-                  <p className="text-xs text-muted-foreground">Today, 09:42 AM</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-2 h-2 mt-1.5 rounded-full bg-secondary" />
-                <div>
-                  <p className="text-sm font-medium">Revenue models updated</p>
-                  <p className="text-xs text-muted-foreground">Yesterday, 14:15 PM</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-2 h-2 mt-1.5 rounded-full bg-accent" />
-                <div>
-                  <p className="text-sm font-medium">New customer segment detected</p>
-                  <p className="text-xs text-muted-foreground">Yesterday, 10:00 AM</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <RecentActivity activities={mockActivities} />
         </motion.div>
       </div>
 
       {/* Vercel-style KPIs */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <motion.div variants={itemVariants}>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Revenue</CardDescription>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-3xl">${(totalRevenue / 1000000).toFixed(2)}M</CardTitle>
-                <Badge variant="outline" className="text-green-500 bg-green-500/10 border-green-500/20">
-                  ▲ 12.4%
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="h-[80px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={last6Months}>
-                  <Line type="monotone" dataKey="revenue" stroke="#743014" strokeWidth={2} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          <MetricCard
+            title="Total Revenue"
+            value={(totalRevenue / 1000000).toFixed(2)}
+            valuePrefix="$"
+            valueSuffix="M"
+            trend={{ value: 12.4, label: "vs last quarter", isPositive: true }}
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={last6Months}>
+                <Line type="monotone" dataKey="revenue" stroke="#743014" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </MetricCard>
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Profit</CardDescription>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-3xl">${(totalProfit / 1000).toFixed(1)}K</CardTitle>
-                <Badge variant="outline" className="text-green-500 bg-green-500/10 border-green-500/20">
-                  ▲ 8.1%
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="h-[80px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={last6Months}>
-                  <Line type="monotone" dataKey="profit" stroke="#84592B" strokeWidth={2} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          <MetricCard
+            title="Total Profit"
+            value={(totalProfit / 1000).toFixed(1)}
+            valuePrefix="$"
+            valueSuffix="K"
+            trend={{ value: 8.1, label: "vs last quarter", isPositive: true }}
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={last6Months}>
+                <Line type="monotone" dataKey="profit" stroke="#84592B" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </MetricCard>
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Orders</CardDescription>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-3xl">{totalOrders.toLocaleString()}</CardTitle>
-                <Badge variant="outline" className="text-destructive bg-destructive/10 border-destructive/20">
-                  ▼ 2.3%
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="h-[80px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={last6Months}>
-                  <Line type="monotone" dataKey="orders" stroke="#ef4444" strokeWidth={2} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          <MetricCard
+            title="Total Orders"
+            value={totalOrders.toLocaleString()}
+            trend={{ value: -2.3, label: "vs last quarter", isPositive: false }}
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={last6Months}>
+                <Line type="monotone" dataKey="orders" stroke="#ef4444" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </MetricCard>
         </motion.div>
       </div>
 
