@@ -1,25 +1,9 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  TrendingUp, 
-  Package, 
-  Users, 
-  Globe, 
-  LineChart, 
-  Cpu 
-} from 'lucide-react';
+
 import { cn } from '@/utils';
 import { useDashboardStore } from '@/store/useDashboardStore';
 import { useEffect } from 'react';
-
-const navigation = [
-  { name: 'Overview', href: '/', icon: LayoutDashboard },
-  { name: 'Analytics', href: '/analytics', icon: TrendingUp },
-  { name: 'Products', href: '/products', icon: Package },
-  { name: 'Customers', href: '/customers', icon: Users },
-  { name: 'Regions', href: '/regions', icon: Globe },
-  { name: 'Forecasting', href: '/forecasting', icon: LineChart },
-];
+import { dashboardModules } from '@/config/dashboardModules';
 
 export function AppShell() {
   const fetchData = useDashboardStore(state => state.fetchData);
@@ -27,6 +11,10 @@ export function AppShell() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Separate modules by layout/type if needed
+  const sidebarModules = dashboardModules.filter(m => m.showInSidebar && m.layout !== 'full');
+  const systemModules = dashboardModules.filter(m => m.showInSidebar && m.layout === 'full');
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
@@ -40,10 +28,10 @@ export function AppShell() {
         </div>
         
         <nav className="flex-1 space-y-1">
-          {navigation.map((item) => (
+          {sidebarModules.map((item) => (
             <NavLink
-              key={item.name}
-              to={item.href}
+              key={item.id}
+              to={item.route}
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium",
@@ -54,30 +42,41 @@ export function AppShell() {
               }
             >
               <item.icon className="w-4 h-4" />
-              {item.name}
+              {item.title}
+              {item.badge && (
+                <span className="ml-auto text-[10px] uppercase tracking-wider font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                  {item.badge}
+                </span>
+              )}
             </NavLink>
           ))}
 
-          <div className="pt-8 pb-2">
-            <div className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              System
+          {systemModules.length > 0 && (
+            <div className="pt-8 pb-2">
+              <div className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                System
+              </div>
             </div>
-          </div>
+          )}
           
-          <NavLink
-            to="/technology"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium",
-                isActive 
-                  ? "bg-secondary text-secondary-foreground" 
-                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-              )
-            }
-          >
-            <Cpu className="w-4 h-4" />
-            Technology
-          </NavLink>
+          {systemModules.map((item) => (
+            <NavLink
+              key={item.id}
+              to={item.route}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium",
+                  isActive 
+                    ? "bg-secondary text-secondary-foreground" 
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                )
+              }
+            >
+              <item.icon className="w-4 h-4" />
+              {item.title}
+            </NavLink>
+          ))}
+
         </nav>
       </div>
 
