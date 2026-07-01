@@ -1,5 +1,6 @@
 import type { Region, Product, Customer, FactSales } from '@/shared/types';
 import { BaseRepository } from './BaseRepository';
+import { globalCache } from './RepositoryCache';
 
 // Fallbacks if fetch fails
 import regionsData from '@/mock/regions.json';
@@ -13,14 +14,23 @@ class SalesRepository extends BaseRepository {
   }
 
   private async fetchProcessed<T>(filename: string, fallback: any): Promise<T> {
+    const cacheKey = `processed_${filename}`;
+    if (globalCache.has(cacheKey)) {
+      return globalCache.get<T>(cacheKey) as T;
+    }
+
     try {
       const res = await fetch(`/dataset/processed/${filename}`);
       if (res.ok) {
-        return await res.json();
+        const data = await res.json();
+        globalCache.set(cacheKey, data);
+        return data;
       }
     } catch (e) {
       console.warn(`Failed to load ${filename}, falling back to mock.`);
     }
+    
+    globalCache.set(cacheKey, fallback);
     return fallback;
   }
 

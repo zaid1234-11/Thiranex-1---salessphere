@@ -10,8 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Skeleton } from "@/components/design-system/skeleton";
 import { motion } from "framer-motion";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { SparklineChart } from "@/components/charts/SparklineChart";
-import { TrendAreaChart } from "@/components/charts/TrendAreaChart";
+import { lazy, Suspense } from 'react';
+
+const SparklineChart = lazy(() => import("@/components/charts/SparklineChart").then(m => ({ default: m.SparklineChart })));
+const TrendAreaChart = lazy(() => import("@/components/charts/TrendAreaChart").then(m => ({ default: m.TrendAreaChart })));
 
 export function CommandCenter() {
   const { sales, isLoading, error } = useDashboardStore();
@@ -109,7 +111,9 @@ export function CommandCenter() {
             valueSuffix="M"
             trend={trends.revenue}
           >
-            <SparklineChart data={timeseries.last6Months} dataKey="revenue" color="hsl(var(--primary))" />
+            <Suspense fallback={<Skeleton className="h-full w-full" />}>
+              <SparklineChart data={timeseries.last6Months} dataKey="revenue" color="hsl(var(--primary))" />
+            </Suspense>
           </MetricCard>
         </motion.div>
 
@@ -121,7 +125,9 @@ export function CommandCenter() {
             valueSuffix="K"
             trend={trends.profit}
           >
-            <SparklineChart data={timeseries.last6Months} dataKey="profit" color="hsl(var(--secondary))" />
+            <Suspense fallback={<Skeleton className="h-full w-full" />}>
+              <SparklineChart data={timeseries.last6Months} dataKey="profit" color="hsl(var(--secondary))" />
+            </Suspense>
           </MetricCard>
         </motion.div>
 
@@ -131,7 +137,9 @@ export function CommandCenter() {
             value={kpis.totalOrders.toLocaleString()}
             trend={trends.orders}
           >
-            <SparklineChart data={timeseries.last6Months} dataKey="orders" color="hsl(var(--destructive))" />
+            <Suspense fallback={<Skeleton className="h-full w-full" />}>
+              <SparklineChart data={timeseries.last6Months} dataKey="orders" color="hsl(var(--destructive))" />
+            </Suspense>
           </MetricCard>
         </motion.div>
       </div>
@@ -144,15 +152,17 @@ export function CommandCenter() {
             <CardDescription>Trailing 6 months aggregated view</CardDescription>
           </CardHeader>
           <CardContent className="h-[350px]">
-            <TrendAreaChart 
-              data={timeseries.last6Months}
-              xAxisKey="name"
-              valueFormatter={(val) => `$${val/1000}k`}
-              series={[
-                { key: 'revenue', name: 'Revenue', color: 'hsl(var(--primary))' },
-                { key: 'profit', name: 'Profit', color: 'hsl(var(--secondary))' }
-              ]}
-            />
+            <Suspense fallback={<Skeleton className="h-full w-full" />}>
+              <TrendAreaChart 
+                data={timeseries.last6Months}
+                xAxisKey="name"
+                valueFormatter={(val) => `$${val/1000}k`}
+                series={[
+                  { key: 'revenue', name: 'Revenue', color: 'hsl(var(--primary))' },
+                  { key: 'profit', name: 'Profit', color: 'hsl(var(--secondary))' }
+                ]}
+              />
+            </Suspense>
           </CardContent>
         </Card>
       </motion.div>
