@@ -10,7 +10,7 @@ interface BarChartComponentProps {
   data: BarData[];
   layout?: 'horizontal' | 'vertical';
   fill?: string;
-  valueFormatter?: (value: number) => string;
+  valueFormatter?: (value: any) => string;
 }
 
 export function BarChartComponent({ 
@@ -45,7 +45,7 @@ export function BarChartComponent({
             cursor={{ fill: '#171B22' }}
             contentStyle={{ backgroundColor: '#171B22', borderColor: '#1F2630', borderRadius: '8px', color: '#F5F5F5' }}
             itemStyle={{ color: '#F5F5F5' }}
-            formatter={(value: number) => [valueFormatter(value), '']}
+            formatter={(value: any) => [valueFormatter(value), '']}
             labelStyle={{ color: '#AEB4C0', marginBottom: '4px' }}
           />
           <Bar dataKey="value" fill={fill} radius={[4, 4, 4, 4]} barSize={layout === 'vertical' ? 24 : 32} />

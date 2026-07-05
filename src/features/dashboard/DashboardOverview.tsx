@@ -41,6 +41,12 @@ export function DashboardOverview() {
     loadData();
   }, [dateRange, region, category]);
 
+  if (isLoading) {
+    return <div className="flex h-[50vh] items-center justify-center">
+      <div className="text-secondary animate-pulse">Loading dashboard data...</div>
+    </div>;
+  }
+
   // Calculate Metrics via Analytics Layer (Memoized)
   const metrics = useMemo(() => {
     const revenue = SalesAnalytics.calculateRevenue(orders);

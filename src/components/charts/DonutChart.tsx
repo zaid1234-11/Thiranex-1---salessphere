@@ -9,7 +9,7 @@ interface DonutData {
 interface DonutChartProps {
   data: DonutData[];
   colors?: string[];
-  valueFormatter?: (value: number) => string;
+  valueFormatter?: (value: any) => string;
 }
 
 export function DonutChart({ 
@@ -38,7 +38,7 @@ export function DonutChart({
           <Tooltip 
             contentStyle={{ backgroundColor: '#171B22', borderColor: '#1F2630', borderRadius: '8px', color: '#F5F5F5' }}
             itemStyle={{ color: '#F5F5F5' }}
-            formatter={(value: number) => [valueFormatter(value), '']}
+            formatter={(value: any) => [valueFormatter(value), '']}
           />
           <Legend 
             verticalAlign="bottom" 
