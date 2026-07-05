@@ -8,6 +8,13 @@ import { SalesAnalytics } from '@/analytics/SalesAnalytics';
 import { BusinessRules } from '@/decisions/BusinessRules';
 import { Order } from '@/types';
 import { DollarSign, TrendingUp, ShoppingCart, Users, Activity } from 'lucide-react';
+import { BarChartComponent } from '@/components/charts/BarChartComponent';
+import { DonutChart } from '@/components/charts/DonutChart';
+import { OrdersTable } from '@/components/tables/OrdersTable';
+import { BusinessInsights } from '@/components/insights/BusinessInsights';
+import { TopCustomersList } from '@/components/insights/TopCustomersList';
+
+import { GlobalFilters } from '@/components/filters/GlobalFilters';
 
 export function DashboardOverview() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -61,20 +68,29 @@ export function DashboardOverview() {
       revenue: value
     }));
 
+  const salesByProduct = SalesAnalytics.aggregateByDimension(orders, 'productId', 'sales');
+  const productData = Object.entries(salesByProduct)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 5)
+    .map(([name, value]) => ({ name, value }));
+
+  const salesByRegion = SalesAnalytics.aggregateByDimension(orders, 'region', 'sales');
+  const regionData = Object.entries(salesByRegion)
+    .sort(([,a], [,b]) => b - a)
+    .map(([name, value]) => ({ name, value }));
+
+  const salesByCategory = SalesAnalytics.aggregateByDimension(orders, 'category', 'sales');
+  const categoryData = Object.entries(salesByCategory)
+    .sort(([,a], [,b]) => b - a)
+    .map(([name, value]) => ({ name, value }));
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       
-      {/* 1. Global Filters Area (Stubbed) */}
-      <div className="flex items-center justify-between border-b border-surface pb-4">
+      {/* 1. Global Filters Area */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface pb-4 gap-4">
         <h1 className="text-2xl font-bold tracking-tight text-primary">Overview</h1>
-        <div className="flex gap-2">
-          {/* Filters will be extracted to a separate component later */}
-          <select className="bg-surface border border-surface text-secondary text-sm rounded-md px-3 py-1.5">
-            <option>All Regions</option>
-            <option>North America</option>
-            <option>EMEA</option>
-          </select>
-        </div>
+        <GlobalFilters />
       </div>
 
       {/* 2. Executive KPI Row */}
@@ -124,43 +140,31 @@ export function DashboardOverview() {
       {/* 4. Sales Performance (Products & Regions) */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ChartCard title="Product Performance" subtitle="Revenue by product line">
-          <div className="flex h-[300px] items-center justify-center border border-dashed border-surface rounded-lg">
-            <span className="text-secondary text-sm">Horizontal Bar Chart (Pending)</span>
-          </div>
+          <BarChartComponent data={productData} layout="vertical" />
         </ChartCard>
         <ChartCard title="Regional Performance" subtitle="Revenue by geography">
-          <div className="flex h-[300px] items-center justify-center border border-dashed border-surface rounded-lg">
-            <span className="text-secondary text-sm">Bar / Map Chart (Pending)</span>
-          </div>
+          <BarChartComponent data={regionData} layout="horizontal" fill="#3FA96B" />
         </ChartCard>
       </div>
 
       {/* 5. Customer Intelligence */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ChartCard title="Category Mix" subtitle="Revenue distribution by category">
-          <div className="flex h-[300px] items-center justify-center border border-dashed border-surface rounded-lg">
-            <span className="text-secondary text-sm">Donut Chart (Pending)</span>
-          </div>
+          <DonutChart data={categoryData} />
         </ChartCard>
         <ChartCard title="Top Customers" subtitle="Highest lifetime value customers">
-          <div className="flex h-[300px] items-center justify-center border border-dashed border-surface rounded-lg">
-            <span className="text-secondary text-sm">Customer List (Pending)</span>
-          </div>
+          <TopCustomersList orders={orders} />
         </ChartCard>
       </div>
 
       {/* 6. Business Insights (AI-assisted) */}
       <ChartCard title="Business Insights" subtitle="AI-assisted observations">
-        <div className="flex h-[150px] items-center justify-center border border-dashed border-surface rounded-lg">
-          <span className="text-secondary text-sm">AI Insights (Pending)</span>
-        </div>
+        <BusinessInsights orders={orders} />
       </ChartCard>
 
       {/* 7. Recent Orders Table */}
       <ChartCard title="Recent Orders">
-        <div className="flex h-[400px] items-center justify-center border border-dashed border-surface rounded-lg">
-          <span className="text-secondary text-sm">Orders Data Table (Pending)</span>
-        </div>
+        <OrdersTable data={orders} />
       </ChartCard>
 
     </div>
