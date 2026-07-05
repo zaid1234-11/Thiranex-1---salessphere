@@ -41,6 +41,9 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-sm text-muted-foreground mb-4">
               {this.state.error?.message || 'An unexpected error occurred loading this component.'}
             </p>
+            <pre className="text-xs text-left w-full overflow-auto text-destructive bg-destructive/10 p-2 rounded">
+              {this.state.error?.stack}
+            </pre>
             <button
               onClick={() => this.setState({ hasError: false })}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
