@@ -31,12 +31,12 @@ export function AppShell() {
         socialItems={socialItems}
         displaySocials={true}
         displayItemNumbering={true}
-        menuButtonColor="hsl(var(--foreground))"
-        openMenuButtonColor="#000"
+        menuButtonColor="#333333"
+        openMenuButtonColor="#000000"
         changeMenuColorOnOpen={true}
-        colors={['hsl(var(--primary))', 'hsl(var(--secondary))']}
+        colors={['#1e1e22', '#35353c']}
         logoUrl=""
-        accentColor="hsl(var(--primary))"
+        accentColor="#5227FF"
         isFixed={true}
       />
 
