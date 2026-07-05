@@ -23,6 +23,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+    
+    // Automatically reload the page if a lazy-loaded chunk fails to load 
+    // (usually happens after a new deployment on Vercel)
+    if (error.message.includes('Failed to fetch dynamically imported module')) {
+      window.location.reload();
+    }
   }
 
   public render() {
