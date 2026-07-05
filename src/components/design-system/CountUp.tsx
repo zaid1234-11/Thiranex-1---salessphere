@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 
 interface CountUpProps {
@@ -10,7 +10,6 @@ interface CountUpProps {
 }
 
 export function CountUp({ value, prefix = '', suffix = '', decimals = 0, duration = 1000 }: CountUpProps) {
-  const [hasStarted, setHasStarted] = useState(false);
   const spring = useSpring(0, { bounce: 0, duration });
   const display = useTransform(spring, (current) => {
     const formatted = current.toFixed(decimals);
@@ -21,7 +20,6 @@ export function CountUp({ value, prefix = '', suffix = '', decimals = 0, duratio
   });
 
   useEffect(() => {
-    setHasStarted(true);
     spring.set(value);
   }, [value, spring]);
 

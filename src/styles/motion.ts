@@ -7,9 +7,9 @@ export const motionTokens = {
     modal: 0.2,
   },
   easing: {
-    default: [0.4, 0.0, 0.2, 1], // Standard Material/Tailwind ease
-    bouncy: [0.34, 1.56, 0.64, 1],
-    smooth: [0.16, 1, 0.3, 1],
+    default: [0.4, 0.0, 0.2, 1] as [number, number, number, number], // Standard Material/Tailwind ease
+    bouncy: [0.34, 1.56, 0.64, 1] as [number, number, number, number],
+    smooth: [0.16, 1, 0.3, 1] as [number, number, number, number],
   },
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cardVariants } from '@/styles/motion';

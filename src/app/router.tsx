@@ -38,7 +38,7 @@ export function AppRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<AppShell />}>
-          {dashboardModules.map((module) => (
+          {dashboardModules?.map((module) => (
             module.visible && (
               <Route 
                 key={module.id} 

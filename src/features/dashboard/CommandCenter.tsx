@@ -22,6 +22,7 @@ import { Download } from "lucide-react";
 
 export function CommandCenter() {
   const { sales, isLoading, error } = useDashboardStore();
+  const { kpis, trends, timeseries } = useSalesAnalytics(sales);
 
   if (isLoading) {
     return (
@@ -46,8 +47,6 @@ export function CommandCenter() {
       />
     );
   }
-
-  const { kpis, trends, timeseries } = useSalesAnalytics(sales);
 
   const containerVariants = {
     hidden: { opacity: 0 },
