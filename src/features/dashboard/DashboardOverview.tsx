@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { MetricCard } from '@/components/ui/MetricCard';
 import { ChartCard } from '@/components/ui/ChartCard';
 import { RevenueChart } from '@/components/charts/RevenueChart';
@@ -41,48 +41,50 @@ export function DashboardOverview() {
     loadData();
   }, [dateRange, region, category]);
 
-  if (isLoading) {
-    return <div className="flex h-[50vh] items-center justify-center">
-      <div className="text-secondary animate-pulse">Loading dashboard data...</div>
-    </div>;
-  }
+  // Calculate Metrics via Analytics Layer (Memoized)
+  const metrics = useMemo(() => {
+    const revenue = SalesAnalytics.calculateRevenue(orders);
+    const profit = SalesAnalytics.calculateProfit(orders);
+    const totalOrders = SalesAnalytics.calculateTotalOrders(orders);
+    const aov = SalesAnalytics.calculateAOV(orders);
+    const customers = SalesAnalytics.calculateTotalCustomers(orders);
+    
+    // Fake previous period for demo purposes
+    const prevRevenue = revenue * 0.88;
+    const growth = SalesAnalytics.calculateGrowth(revenue, prevRevenue);
+    const growthStatus = BusinessRules.evaluateGrowthStatus(growth);
 
-  // Calculate Metrics via Analytics Layer
-  const revenue = SalesAnalytics.calculateRevenue(orders);
-  const profit = SalesAnalytics.calculateProfit(orders);
-  const totalOrders = SalesAnalytics.calculateTotalOrders(orders);
-  const aov = SalesAnalytics.calculateAOV(orders);
-  const customers = SalesAnalytics.calculateTotalCustomers(orders);
-  
-  // Fake previous period for demo purposes
-  const prevRevenue = revenue * 0.88;
-  const growth = SalesAnalytics.calculateGrowth(revenue, prevRevenue);
-  const growthStatus = BusinessRules.evaluateGrowthStatus(growth);
+    return { revenue, profit, totalOrders, aov, customers, growth, growthStatus };
+  }, [orders]);
 
-  // Prepare Chart Data
-  const salesByMonth = SalesAnalytics.aggregateByDimension(orders, 'date', 'sales');
-  const revenueData = Object.entries(salesByMonth)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, value]) => ({
-      date: new Date(date).toLocaleString('default', { month: 'short' }),
-      revenue: value
-    }));
+  // Prepare Chart Data (Memoized)
+  const { revenueData, productData, regionData, categoryData } = useMemo(() => {
+    const salesByMonth = SalesAnalytics.aggregateByDimension(orders, 'date', 'sales');
+    const revenueData = Object.entries(salesByMonth)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, value]) => ({
+        date: new Date(date).toLocaleString('default', { month: 'short' }),
+        revenue: value
+      }));
 
-  const salesByProduct = SalesAnalytics.aggregateByDimension(orders, 'productId', 'sales');
-  const productData = Object.entries(salesByProduct)
-    .sort(([,a], [,b]) => b - a)
-    .slice(0, 5)
-    .map(([name, value]) => ({ name, value }));
+    const salesByProduct = SalesAnalytics.aggregateByDimension(orders, 'productId', 'sales');
+    const productData = Object.entries(salesByProduct)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([name, value]) => ({ name, value }));
 
-  const salesByRegion = SalesAnalytics.aggregateByDimension(orders, 'region', 'sales');
-  const regionData = Object.entries(salesByRegion)
-    .sort(([,a], [,b]) => b - a)
-    .map(([name, value]) => ({ name, value }));
+    const salesByRegion = SalesAnalytics.aggregateByDimension(orders, 'region', 'sales');
+    const regionData = Object.entries(salesByRegion)
+      .sort(([,a], [,b]) => b - a)
+      .map(([name, value]) => ({ name, value }));
 
-  const salesByCategory = SalesAnalytics.aggregateByDimension(orders, 'category', 'sales');
-  const categoryData = Object.entries(salesByCategory)
-    .sort(([,a], [,b]) => b - a)
-    .map(([name, value]) => ({ name, value }));
+    const salesByCategory = SalesAnalytics.aggregateByDimension(orders, 'category', 'sales');
+    const categoryData = Object.entries(salesByCategory)
+      .sort(([,a], [,b]) => b - a)
+      .map(([name, value]) => ({ name, value }));
+
+    return { revenueData, productData, regionData, categoryData };
+  }, [orders]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -97,35 +99,35 @@ export function DashboardOverview() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <MetricCard 
           title="Total Revenue" 
-          value={`$${revenue.toLocaleString()}`} 
-          trend={growth} 
-          status={growthStatus}
+          value={`$${metrics.revenue.toLocaleString()}`} 
+          trend={metrics.growth} 
+          status={metrics.growthStatus}
           icon={<DollarSign className="h-4 w-4" />} 
         />
         <MetricCard 
           title="Total Profit" 
-          value={`$${profit.toLocaleString()}`} 
+          value={`$${metrics.profit.toLocaleString()}`} 
           trend={12.5} 
           status="good"
           icon={<TrendingUp className="h-4 w-4" />} 
         />
         <MetricCard 
           title="Orders" 
-          value={totalOrders.toLocaleString()} 
+          value={metrics.totalOrders.toLocaleString()} 
           trend={-2.1} 
           status="warning"
           icon={<ShoppingCart className="h-4 w-4" />} 
         />
         <MetricCard 
           title="Average Order Value" 
-          value={`$${Math.round(aov).toLocaleString()}`} 
+          value={`$${Math.round(metrics.aov).toLocaleString()}`} 
           trend={5.4} 
           status="good"
           icon={<Activity className="h-4 w-4" />} 
         />
         <MetricCard 
           title="Customers" 
-          value={customers.toLocaleString()} 
+          value={metrics.customers.toLocaleString()} 
           trend={18.2} 
           status="excellent"
           icon={<Users className="h-4 w-4" />} 
