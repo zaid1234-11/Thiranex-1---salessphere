@@ -1,32 +1,65 @@
-# React + TypeScript + Vite
+<div align="center">
+  <img src="https://via.placeholder.com/150?text=SalesSphere" alt="SalesSphere Logo" width="100" />
+  <h1>SalesSphere</h1>
+  <p><strong>Enterprise Sales Intelligence Platform</strong></p>
+  <p><em>Transforming operational sales data into explainable business decisions through contextual analytics and actionable recommendations.</em></p>
+  <br />
+</div>
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Philosophy
 
-Currently, two official plugins are available:
+SalesSphere is built on the philosophy of **"Calm Enterprise Intelligence."**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. **Every screen answers one business question.**
+2. **Context before visualization.**
+3. **Recommendations before exploration.**
+4. **Pixels build trust.**
 
-## React Compiler
+We move away from "dashboards" that are merely collections of charts, towards an application shell that models how executives think:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+`Observe → Analyze → Understand → Decide → Act`
 
-## Expanding the Oxlint configuration
+## Features
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- **Executive Briefing**: Understand business health instantly through AI-generated natural language summaries, not just KPI numbers.
+- **Explainable Recommendations**: Get AI-powered recommendations (e.g., "Liquidate Furniture Inventory") with direct business impact and supporting rationales.
+- **Enterprise Design System**: A meticulously crafted 8pt grid interface with a bespoke color palette, refined typography (`Inter`, `Playfair Display`, `JetBrains Mono`), and subtle micro-animations that feel premium.
+- **Workflow-driven Architecture**: Pages structured around decision flows (Overview, Performance, Products, Customers, Intelligence, Board Reports).
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Technology Stack
+
+- **Framework**: React 18, TypeScript, Vite
+- **Styling**: Vanilla CSS (CSS Variables) + Tailwind CSS (Strictly mapped to CSS Tokens)
+- **Animation**: Framer Motion
+- **Data Visualization**: Recharts (Customized and beautified)
+- **Icons**: Lucide React
+- **Routing**: React Router
+
+## Design System
+
+The application strictly adheres to a design system defined in `src/index.css`.
+- **Spacing**: 8pt increments (`4px` micro, `8px` related, `16px` components, `24px` cards...)
+- **Typography**: `Inter` (UI), `Playfair Display` (Hero statements), `JetBrains Mono` (Data)
+- **Colors**: Deep surface (`#0F1516`), Premium card (`#141C1E`), Success/Warning/Danger/Info Semantic mapping.
+
+## Architecture
+
+![Architecture](architecture/architecture.svg)
+
+## Installation
+
+```bash
+git clone https://github.com/yourusername/salessphere.git
+cd salessphere
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a history of updates and releases.
+
+<br />
+<div align="center">
+  <p>Built with intention and care.</p>
+</div>

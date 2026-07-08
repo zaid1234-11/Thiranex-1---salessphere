@@ -1,17 +1,24 @@
 import { Order } from '@/types';
-import { MOCK_RAW_DATA } from '@/data/mockData';
 import { OrderTransformer } from '@/transformers/OrderTransformer';
 
 export class OrderRepository {
   /**
-   * Fetches the raw data, applies transformation, and returns the normalized Dataset.
-   * In a real application, this would fetch from an API or parse a CSV file.
+   * Fetches the real data from the processed Olist dataset (10k subset).
    */
   static async getOrders(): Promise<Order[]> {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    // Transform the raw data through the Transformation Layer
-    return OrderTransformer.transformMany(MOCK_RAW_DATA);
+    try {
+      const response = await fetch('/dataset/processed/factSales_10k.json');
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders data');
+      }
+      
+      const rawData = await response.json();
+      
+      // Transform the raw data through the Transformation Layer
+      return OrderTransformer.transformMany(rawData);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      return [];
+    }
   }
 }

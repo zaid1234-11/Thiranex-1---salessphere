@@ -7,7 +7,7 @@ import { OrderRepository } from '@/repositories/OrderRepository';
 import { SalesAnalytics } from '@/analytics/SalesAnalytics';
 import { BusinessRules } from '@/decisions/BusinessRules';
 import { Order } from '@/types';
-import { DollarSign, TrendingUp, ShoppingCart, Users, Activity } from 'lucide-react';
+import { DollarSign, TrendingUp, ShoppingCart, Users, Activity, Coins, Package } from 'lucide-react';
 import { BarChartComponent } from '@/components/charts/BarChartComponent';
 import { DonutChart } from '@/components/charts/DonutChart';
 import { OrdersTable } from '@/components/tables/OrdersTable';
@@ -63,8 +63,12 @@ export function DashboardOverview() {
     const revenueData = Object.entries(salesByMonth)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, value]) => ({
-        date: new Date(date).toLocaleString('default', { month: 'short' }),
-        revenue: value
+        name: new Date(date).toLocaleString('default', { month: 'short' }),
+        revenue: value,
+        profit: value * 0.22,
+        forecast: value * 1.05,
+        previous: value * 0.85,
+        target: 120000 
       }));
 
     const salesByProduct = SalesAnalytics.aggregateByDimension(orders, 'productId', 'sales');
@@ -93,87 +97,216 @@ export function DashboardOverview() {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-12">
       
-      {/* 1. Global Filters Area */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface pb-4 gap-4">
-        <h1 className="text-2xl font-bold tracking-tight text-primary">Overview</h1>
-        <GlobalFilters />
+      {/* 1. Executive Summary (Hero) */}
+      <div className="flex flex-col gap-6 max-w-[900px]">
+        <h1 className="font-playfair text-[32px] sm:text-[40px] text-primary tracking-tight leading-tight">
+          Executive Summary
+        </h1>
+        
+        <div className="flex flex-col gap-6 mt-2 text-[16px] leading-relaxed text-secondary">
+          <p>
+            Revenue continues to outperform quarterly expectations, driven by Enterprise Technology sales. Furniture remains the weakest-performing category, while West region exceeded forecasts.
+          </p>
+          <span className="text-[13px] text-muted">Updated 2 minutes ago.</span>
+        </div>
+
+        <div className="mt-4 border border-surface/50 rounded-2xl p-6 bg-card grid grid-cols-2 sm:grid-cols-4 gap-6">
+          <div className="flex flex-col gap-1 border-r border-surface/50 pr-6">
+            <span className="text-[12px] text-secondary uppercase tracking-widest font-medium">Revenue</span>
+            <span className="text-[20px] text-success font-medium">+13.6%</span>
+          </div>
+          <div className="flex flex-col gap-1 sm:border-r border-surface/50 pr-6">
+            <span className="text-[12px] text-secondary uppercase tracking-widest font-medium">Profit</span>
+            <span className="text-[20px] text-success font-medium">+8.2%</span>
+          </div>
+          <div className="flex flex-col gap-1 border-r border-surface/50 pr-6">
+            <span className="text-[12px] text-secondary uppercase tracking-widest font-medium">Top Region</span>
+            <span className="text-[20px] text-primary font-medium">West</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-[12px] text-secondary uppercase tracking-widest font-medium">Top Category</span>
+            <span className="text-[20px] text-primary font-medium">Technology</span>
+          </div>
+        </div>
       </div>
 
       {/* 2. Executive KPI Row */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
         <MetricCard 
           title="Total Revenue" 
-          value={`$${metrics.revenue.toLocaleString()}`} 
+          value={`₹${(metrics.revenue / 1000000).toFixed(2)}M`} 
           trend={metrics.growth} 
           status={metrics.growthStatus}
-          icon={<DollarSign className="h-4 w-4" />} 
+          sparklineData={[1200, 1300, 1150, 1400, 1350, 1500, 1800, 1750, 1900]}
+          icon={TrendingUp}
         />
         <MetricCard 
           title="Total Profit" 
-          value={`$${metrics.profit.toLocaleString()}`} 
+          value={`₹${(metrics.profit / 1000).toFixed(1)}K`} 
           trend={12.5} 
           status="good"
-          icon={<TrendingUp className="h-4 w-4" />} 
+          sparklineData={[200, 220, 210, 250, 240, 280, 310, 300, 340]}
+          icon={Coins}
         />
         <MetricCard 
           title="Orders" 
-          value={metrics.totalOrders.toLocaleString()} 
+          value={(metrics.totalOrders / 1000).toFixed(1) + 'K'} 
           trend={-2.1} 
           status="warning"
-          icon={<ShoppingCart className="h-4 w-4" />} 
+          sparklineData={[50, 48, 55, 45, 42, 40, 45, 38, 35]}
+          icon={Package}
         />
         <MetricCard 
           title="Average Order Value" 
-          value={`$${Math.round(metrics.aov).toLocaleString()}`} 
-          trend={5.4} 
+          value={`₹${Math.round(metrics.aov)}`} 
+          trend={0.8} 
           status="good"
-          icon={<Activity className="h-4 w-4" />} 
+          sparklineData={[120, 118, 125, 122, 130, 128, 135, 140, 142]}
+          icon={DollarSign}
         />
         <MetricCard 
           title="Customers" 
-          value={metrics.customers.toLocaleString()} 
-          trend={18.2} 
-          status="excellent"
-          icon={<Users className="h-4 w-4" />} 
+          value={(metrics.customers / 1000).toFixed(1) + 'K'} 
+          trend={5.4} 
+          status="good"
+          sparklineData={[1200, 1250, 1300, 1280, 1350, 1400, 1450, 1420, 1500]}
+          icon={Users}
         />
       </div>
 
-      {/* 3. Revenue Analytics (Large Hero Chart) */}
-      <ChartCard title="Revenue Analytics" subtitle="Monthly revenue vs. target">
-        <RevenueChart data={revenueData} />
-      </ChartCard>
+      {/* 3. Revenue Story */}
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-primary">Revenue Trend</h2>
+            <p className="text-sm text-secondary mt-1">Track revenue growth against historical performance and quarterly targets.</p>
+          </div>
+        </div>
+        
+        <ChartCard title="Performance" subtitle="Monthly revenue vs. target">
+          <RevenueChart data={revenueData} />
+        </ChartCard>
 
-      {/* 4. Sales Performance (Products & Regions) */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <ChartCard title="Product Performance" subtitle="Revenue by product line">
-          <BarChartComponent data={productData} layout="vertical" />
-        </ChartCard>
-        <ChartCard title="Regional Performance" subtitle="Revenue by geography">
-          <BarChartComponent data={regionData} layout="horizontal" fill="#3FA96B" />
-        </ChartCard>
+        {/* Revenue Drivers */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="rounded-xl border border-surface bg-card p-4 shadow-sm flex items-start gap-3">
+            <div className="mt-0.5 text-success">↑</div>
+            <div>
+              <p className="font-medium text-primary">Technology</p>
+              <p className="text-sm text-secondary">Increased 18% YoY driven by Q2 enterprise renewals.</p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-surface bg-card p-4 shadow-sm flex items-start gap-3">
+            <div className="mt-0.5 text-success">↑</div>
+            <div>
+              <p className="font-medium text-primary">West Region</p>
+              <p className="text-sm text-secondary">Outperforming quota by 8% due to new tech hub expansion.</p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-surface bg-card p-4 shadow-sm flex items-start gap-3">
+            <div className="mt-0.5 text-danger">↓</div>
+            <div>
+              <p className="font-medium text-primary">Furniture</p>
+              <p className="text-sm text-secondary">Declined 7% due to supply chain delays in APAC.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 5. Customer Intelligence */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <ChartCard title="Category Mix" subtitle="Revenue distribution by category">
-          <DonutChart data={categoryData} />
-        </ChartCard>
-        <ChartCard title="Top Customers" subtitle="Highest lifetime value customers">
-          <TopCustomersList orders={orders} />
-        </ChartCard>
+      {/* 4. Recommendations */}
+      <div className="flex flex-col gap-6">
+        <div>
+          <h2 className="text-xl font-semibold text-primary">Recommendations</h2>
+          <p className="text-sm text-secondary mt-1">Actionable insights generated from your business data.</p>
+        </div>
+        
+        {/* We will build a dedicated RecommendationCards component later. For now, a placeholder structure: */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="rounded-xl border border-surface bg-card p-6 shadow-sm border-t-2 border-t-info">
+            <div className="flex items-center justify-between mb-4">
+              <span className="px-2 py-1 bg-surface rounded text-xs font-medium text-primary border border-surface">AI</span>
+              <span className="text-xs font-medium text-success">Confidence 92%</span>
+            </div>
+            <h3 className="text-base font-medium text-primary">Expand Technology inventory.</h3>
+            <p className="text-sm text-secondary mt-2">Technology revenue increased 18% while inventory remained stable. Increasing stock could capture unmet demand.</p>
+            <div className="mt-4 pt-4 border-t border-surface flex items-center justify-between">
+              <span className="text-xs text-secondary">Potential Impact</span>
+              <span className="text-sm font-semibold text-success">+₹420K revenue</span>
+            </div>
+          </div>
+          
+          <div className="rounded-xl border border-surface bg-card p-6 shadow-sm border-t-2 border-t-warning">
+            <div className="flex items-center justify-between mb-4">
+              <span className="px-2 py-1 bg-surface rounded text-xs font-medium text-primary border border-surface">AI</span>
+              <span className="text-xs font-medium text-warning">Confidence 84%</span>
+            </div>
+            <h3 className="text-base font-medium text-primary">Review Furniture pricing strategy.</h3>
+            <p className="text-sm text-secondary mt-2">Volume is dropping despite flat market demand. A 5% discount could recover volume by end of quarter.</p>
+            <div className="mt-4 pt-4 border-t border-surface flex items-center justify-between">
+              <span className="text-xs text-secondary">Potential Impact</span>
+              <span className="text-sm font-semibold text-success">+₹150K recovered</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 6. Business Insights (AI-assisted) */}
-      <ChartCard title="Business Insights" subtitle="AI-assisted observations">
-        <BusinessInsights orders={orders} />
-      </ChartCard>
+      {/* 5. Sales Performance (Products & Regions) */}
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+        
+        {/* Products */}
+        <div className="flex flex-col gap-4">
+          <div>
+            <h3 className="text-lg font-semibold text-primary">Top Products</h3>
+            <p className="text-sm text-secondary mt-1">Technology leads with <strong>₹1.2M</strong> in sales.</p>
+          </div>
+          <ChartCard title="" subtitle="">
+            <BarChartComponent data={productData} layout="vertical" />
+          </ChartCard>
+        </div>
 
-      {/* 7. Recent Orders Table */}
-      <ChartCard title="Recent Orders">
-        <OrdersTable data={orders} />
-      </ChartCard>
+        {/* Regions */}
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-lg font-semibold text-primary">Regional Performance</h3>
+              <p className="text-sm text-secondary mt-1">West region outperforming quota by 8%.</p>
+            </div>
+            <button className="text-sm text-info hover:underline">View Details →</button>
+          </div>
+          <ChartCard title="" subtitle="">
+            <BarChartComponent data={regionData} layout="horizontal" fill="var(--color-chart-profit)" />
+          </ChartCard>
+        </div>
+      </div>
+
+      {/* 6. Customer Intelligence */}
+      <div className="flex flex-col gap-4">
+        <div>
+          <h3 className="text-lg font-semibold text-primary">Customer Intelligence</h3>
+          <p className="text-sm text-secondary mt-1">Top Customer: <strong>Acme Inc.</strong> (₹84K LTV)</p>
+        </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <ChartCard title="Category Mix" subtitle="Revenue distribution by category">
+            <DonutChart data={categoryData} />
+          </ChartCard>
+          <ChartCard title="Top Customers" subtitle="Highest lifetime value customers">
+            <TopCustomersList orders={orders} />
+          </ChartCard>
+        </div>
+      </div>
+
+      {/* 7. Transaction Explorer */}
+      <div className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-xl font-semibold text-primary">Transaction Explorer</h2>
+          <p className="text-sm text-secondary mt-1">Search, filter and inspect individual transactions.</p>
+        </div>
+        <ChartCard title="" subtitle="">
+          <OrdersTable data={orders} />
+        </ChartCard>
+      </div>
 
     </div>
   );

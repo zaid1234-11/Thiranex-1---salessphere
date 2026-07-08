@@ -1,22 +1,23 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-
-interface DonutData {
-  name: string;
-  value: number;
-}
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { CustomTooltip } from './CustomTooltip';
 
 interface DonutChartProps {
-  data: DonutData[];
-  colors?: string[];
-  valueFormatter?: (value: any) => string;
+  data: Array<{
+    name: string;
+    value: number;
+  }>;
 }
 
-export function DonutChart({ 
-  data, 
-  colors = ['#4E8EF7', '#3FA96B', '#E5B25D', '#E06B6B', '#AEB4C0'],
-  valueFormatter = (val) => `$${(val / 1000).toFixed(0)}k`
-}: DonutChartProps) {
+export function DonutChart({ data }: DonutChartProps) {
+  const colors = [
+    'var(--color-chart-revenue)',
+    'var(--color-chart-profit)',
+    'var(--color-chart-forecast)',
+    'var(--color-chart-orders)',
+    'var(--color-chart-customers)',
+  ];
+
   return (
     <div className="h-full w-full min-h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
@@ -25,26 +26,31 @@ export function DonutChart({
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius={80}
-            outerRadius={110}
+            innerRadius="60%"
+            outerRadius="80%"
             paddingAngle={2}
             dataKey="value"
             stroke="none"
+            animationDuration={800}
+            animationEasing="ease-out"
           >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            {data.map((_entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={colors[index % colors.length]} 
+                style={{ outline: 'none', transition: 'all 0.3s ease' }}
+              />
             ))}
           </Pie>
           <Tooltip 
-            contentStyle={{ backgroundColor: '#171B22', borderColor: '#1F2630', borderRadius: '8px', color: '#F5F5F5' }}
-            itemStyle={{ color: '#F5F5F5' }}
-            formatter={(value: any) => [valueFormatter(value), '']}
+            content={<CustomTooltip />}
+            cursor={{ fill: 'transparent' }}
           />
           <Legend 
             verticalAlign="bottom" 
             height={36} 
             iconType="circle"
-            formatter={(value) => <span className="text-secondary text-sm">{value}</span>}
+            wrapperStyle={{ fontSize: '11px', paddingTop: '16px' }}
           />
         </PieChart>
       </ResponsiveContainer>
