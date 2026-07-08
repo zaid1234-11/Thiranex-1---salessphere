@@ -1,0 +1,49 @@
+[33m00cd01f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m salessphere new ui
+[33m42b3f02[m[33m ([m[1;31morigin/main[m[33m)[m Fix React hook rules violation by moving early return below useMemo
+[33m49c227a[m Milestone 12: Relax tsconfig for standard Vite React build
+[33ma9abeb7[m Milestone 11: Implement performance optimizations and fix tsconfig
+[33mfb8456c[m Milestone 10: Extract GlobalFilters to connect with Zustand
+[33m76869aa[m Milestone 10: Complete Dashboard Composition and assemble page layout
+[33m36c7a8f[m Milestone 8 & 9: Add Global Store and Reusable UI Components
+[33md571017[m Milestone 6 & 7: Add Analytics Layer and Decision Layer
+[33mcf03750[m Milestone 4 & 5: Add mock dataset, Transformation layer, and Repository layer
+[33m7fe1921[m Milestone 3: Add AppShell and TopNavigation layout
+[33m6b7bbaf[m Milestone 1: Scaffold remaining docs structure
+[33m8fb08c2[m Milestone 1: Add docs folder structure and v5.0 spec
+[33mf2addd1[m Milestone 1: Configure Tailwind CSS v4 and design tokens
+[33mca79717[m Milestone 1: Project Initialization (React + Vite + TypeScript)
+[33mf310f66[m Delete everything except dataset
+[33ma2f74ed[m Remove ETL_PIPELINE.md
+[33m8375514[m Auto-reload on chunk load failure
+[33mabbe1a3[m Fix GSAP color parsing crash
+[33m85a1e9a[m Update ErrorBoundary to show stack trace
+[33mfddd5dc[m Fix TypeScript errors
+[33m67638cf[m[33m ([m[1;33mtag: [m[1;33mv1.0.0[m[33m)[m docs: Stage 4 GitHub Polish - Hero banner, Portfolio case study, badges, and folder structure
+[33md6482de[m docs: Stage 3 Engineering Handbook - Complete architecture and decision documentation
+[33md0436f0[m feat: Stage 2 UX Polish - Skeleton system, Motion system, Empty States, Toasts
+[33m3f9b5f2[m feat: Stage 1 Performance - Route splitting, Repository Cache, Virtualization
+[33mdb563fb[m feat: complete ETL pipeline with category-based profit model
+[33m88df022[m feat: papaparse integration for kaggle dataset
+[33mfbbf6e5[m feat: forecasting module with trend area charts
+[33m13442b0[m feat: populate dashboard pages with data tables and filters
+[33m23f16ae[m feat: standard DataTable and FilterBar widgets
+[33mca91db4[m feat: setup application domain features and pages
+[33m79610b6[m feat: extract analytics logic into reusable hook
+[33m5312e02[m feat: setup base repository layer for data access
+[33m94ee645[m feat: standard chart components
+[33m178610f[m feat: extract reusable dashboard widgets
+[33mf8b4c97[m feat: implement PageHeader and Breadcrumb layout components
+[33m303a1cf[m fix: move design-system components to correct src path
+[33med7fba3[m feat: implement Design System core primitives
+[33m838a80d[m style: update color palette to trusted and professional blue theme
+[33m89ab6dd[m feat: implement App Shell, routing, providers, and dashboard registry
+[33md042f99[m chore: setup project structure with 4-tier clean architecture
+[33m58afce9[m style: set background color to e8d1a7
+[33mc411e58[m fix: type imports for verbatimModuleSyntax
+[33mc92488a[m feat: command center and technology modules
+[33m57fc979[m feat: layout and navigation
+[33m49f70ed[m feat: data layer and state management
+[33m60e0e33[m feat: routing and folder structure
+[33m7ee0436[m feat: theming and base configuration
+[33m6f3076d[m chore: create vite react-ts app
+[33m7ecc947[m chore: initial commit (agent skills)
